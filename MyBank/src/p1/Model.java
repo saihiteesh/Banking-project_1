@@ -73,4 +73,41 @@ public Model()//Constructor are created so that it executes first because loader
 	}
 }
 
+public boolean checkBalance()
+{
+	try {
+		pstmt=con.prepareStatement("SELECT * FROM MyBank WHERE AccNo=?");
+		pstmt.setString(1,accno);
+		res=pstmt.executeQuery();
+		if(res.next()==true)
+		{
+			balance=res.getString("BALANCE");
+			return true;
+		}
+	}
+	catch(Exception e)
+	{
+	e.printStackTrace();
+	}
+	return false;
+}
+public boolean ChangePwd()
+{
+	try{
+		pstmt=con.prepareStatement("UPDATE Mybank SET PWD=? WHERE ACCNO=?");
+		pstmt.setString(1,pwd);
+		pstmt.setString(2,accno);
+		int row=pstmt.executeUpdate();
+		if(row==0)
+		{
+			return false;
+		}
+	}
+	catch(Exception e)
+	{
+	}
+	return true;
+}
+}
+
 
