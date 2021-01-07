@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
+import java.util.ArrayList;
 public class Model {
 	private String custid;
 	private String accno;
@@ -109,5 +109,46 @@ public boolean ChangePwd()
 	return true;
 }
 }
-
+public boolean transfer()
+{
+	try {
+		pstmt=con.prepareStatement("UPDATE Mybank SET BALANCE= BALANCE - ? WHERE ACCNO=?");
+	
+	pstmt.setString(1, tamt);
+    pstmt.setString(2, accno);
+    int row=pstmt.executeUpdate();
+    pstmt=con.prepareStatement("INSERT INTO BANKSTMT VALUES(?,?)");
+    pstmt.setString(1, accno);
+    pstmt.setString(2, tamt);
+    pstmt.executeUpdate();
+    if(row==0)
+    {
+    	return false;
+    }
+	}
+    catch(Exception e)
+    {
+    }
+    return true;
+}
+public ArrayList getstmt()
+{
+	ArrayList al=new ArrayList();
+	try
+	{
+		pstmt=con.prepareStatement("SELECT * FROM BANKSTMT WHERE ACCNO=?");
+		pstmt.setString(1, accno);
+		res=pstmt.executeQuery();
+		while(res.next()==true)
+		{
+			String temp=res.getString("TAMT");
+			al.add(temp);
+		}
+	}
+	catch(Exception e)
+	{
+	}
+	return al;
+		}
+}
 
